@@ -9,7 +9,7 @@ export class Pokedex {
     // Pokedex config
     cache: true,
     timeout: 20 * 1_000,
-    baseUrl: "http://pokeapi.co/api/v2/",
+    baseUrl: "https://pokeapi.co/api/v2/",
 
     // Endpoint configuration
     offset: 0,
