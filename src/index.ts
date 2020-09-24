@@ -12,12 +12,12 @@ export class Pokedex {
     this.config = {
       // Pokedex config
       cache: true,
-      timeout: 20 * 1_000,
+      timeout: 20 * 1000,
       baseUrl: "https://pokeapi.co/api/v2/",
 
       // Endpoint configuration
       offset: 0,
-      limit: 100_000,
+      limit: 100000,
       ...config,
     };
 
