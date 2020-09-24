@@ -1,3 +1,13 @@
+**/!\ - Heads up**: This is a fork of [https://github.com/PokeAPI/pokeapi-js-wrapper](https://github.com/PokeAPI/pokeapi-js-wrapper). This fork is meant to be a modern lightweight true browser based alternative to the original library.
+
+How did I achieve this?
+
+I replaced [axios]() by [redaxios]() and [localeForage]() by [idb-keyval]() and reworte it in typescript.
+
+**At the moment there's no tests for it.**
+
+---
+
 # pokeapi-js-wrapper <img heigth=50 width=50 src="http://imgur.com/2E5yZzQ.png">
 
 [![npm version](https://badge.fury.io/js/pokeapi-js-wrapper.svg)](https://badge.fury.io/js/pokeapi-js-wrapper)
@@ -6,11 +16,11 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/pokeapi/pokeapi-js-wrapper/badge.svg?targetFile=package.json)](https://snyk.io/test/github/pokeapi/pokeapi-js-wrapper?targetFile=package.json)
 [![Ghit.me](https://ghit.me/badge.svg?repo=PokeAPI/pokeapi-js-wrapper)](https://ghit.me/repo/PokeAPI/pokeapi-js-wrapper)
 
-
 A PokeAPI wrapper intended for browsers only. Comes fully asynchronous (with [localForage](https://github.com/localForage/localForage)) and built-in cache. For a Node (server-side) wrapper see: [pokedex-promise-v2](https://github.com/PokeAPI/pokedex-promise-v2)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 **Table of Contents**
 
 - [Install](#install)
@@ -39,9 +49,9 @@ A PokeAPI wrapper intended for browsers only. Comes fully asynchronous (with [lo
 
 ## Install
 
-![Chrome](https://raw.github.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/src/safari/safari_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/src/opera/opera_48x48.png) | ![Edge](https://raw.github.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![IE](https://raw.github.com/alrra/browser-logos/master/src/archive/internet-explorer_9-11/internet-explorer_9-11_48x48.png) |
---- | --- | --- | --- | --- | --- |
-✔ | ✔ | ✔ | ✔ | ✔ | [8+](#internet-explorer-8) ✔ |
+| ![Chrome](https://raw.github.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/src/safari/safari_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/src/opera/opera_48x48.png) | ![Edge](https://raw.github.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![IE](https://raw.github.com/alrra/browser-logos/master/src/archive/internet-explorer_9-11/internet-explorer_9-11_48x48.png) |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| ✔                                                                                        | ✔                                                                                           | ✔                                                                                        | ✔                                                                                     | ✔                                                                                  | [8+](#internet-explorer-8) ✔                                                                                                 |
 
 ```shell
 npm install pokeapi-js-wrapper --save
@@ -50,13 +60,15 @@ npm install pokeapi-js-wrapper --save
 ## Usage
 
 ```js
-const Pokedex = require('pokeapi-js-wrapper');
+const Pokedex = require("pokeapi-js-wrapper");
 const P = new Pokedex.Pokedex();
 ```
 
 ```html
 <script src="https://unpkg.com/pokeapi-js-wrapper/dist/index.js"></script>
-<script> const P = new Pokedex.Pokedex(); </script>
+<script>
+  const P = new Pokedex.Pokedex();
+</script>
 ```
 
 **NOTE**: Any function with the designation "ByName" can also be passed an integer ID. However, the functions with the designation "ById" can only be passed an integer ID. Refer to the [pokeapi v2 docs](http://pokeapi.co/docsv2/) to find out more about how the data is structured.
@@ -66,18 +78,21 @@ const P = new Pokedex.Pokedex();
 ### [Example](http://jsbin.com/jedakor/edit?html,console) requests
 
 ```js
-  const golduck = await P.getPokemonByName('golduck') // with await, be sure to be in an async function (and in a try/catch)
-  console.log(golduck)
-  
-  P.getPokemonByName('eevee') // with Promise
-    .then(function(response) {
-      console.log(response);
-    });
-    
-  P.resource(['/api/v2/pokemon/36', 'api/v2/berry/8', 'https://pokeapi.co/api/v2/ability/9/'])
-    .then(function(response) {
-      console.log(response); // resource function accepts singles or arrays of URLs/paths
-    });
+const golduck = await P.getPokemonByName("golduck"); // with await, be sure to be in an async function (and in a try/catch)
+console.log(golduck);
+
+P.getPokemonByName("eevee") // with Promise
+  .then(function (response) {
+    console.log(response);
+  });
+
+P.resource([
+  "/api/v2/pokemon/36",
+  "api/v2/berry/8",
+  "https://pokeapi.co/api/v2/ability/9/",
+]).then(function (response) {
+  console.log(response); // resource function accepts singles or arrays of URLs/paths
+});
 ```
 
 ## Configuration
@@ -85,16 +100,15 @@ const P = new Pokedex.Pokedex();
 Pass an Object to Pokedex() in order to configure it. Available options: `protocol`, `hostName`, `versionPath`, `cache`, `timeout` in ms.
 Any option is optional :smile:. If no Object is passed, the Pokedex will be initialized to grab data from pokeapi.co using http with 20 seconds timeout and caching resources. We recommend to use HTTPS protocol since Pokeapi.co recently enabled HTTP->HTTPS redirects.
 
-
 ```js
-const Pokedex = require('pokeapi-js-wrapper');
+const Pokedex = require("pokeapi-js-wrapper");
 const options = {
-  protocol: 'https',
-  hostName: 'localhost:443',
-  versionPath: '/api/v2/',
+  protocol: "https",
+  hostName: "localhost:443",
+  versionPath: "/api/v2/",
   cache: true,
-  timeout: 5 * 1000 // 5s
-}
+  timeout: 5 * 1000, // 5s
+};
 const P = new Pokedex.Pokedex(options);
 ```
 
@@ -115,40 +129,36 @@ Or open `/test/test.html` in your browser. A live version can be found at [`gh-p
 Use **getBerryByName** to return data about a specific berry.
 
 ```js
-  P.getBerryByName('cheri')
-    .then(function(response) {
-      console.log(response);
-    });
+P.getBerryByName("cheri").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getBerryFirmnessByName** to return data about the firmness of a specific berry.
 
 ```js
-  P.getBerryFirmnessByName('very-soft')
-    .then(function(response) {
-      console.log(response);
-    });
+P.getBerryFirmnessByName("very-soft").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getBerryFlavorByName** to return data about the flavor of a specific berry.
 
 ```js
-  P.getBerryFlavorByName('spicy')
-    .then(function(response) {
-      console.log(response);
-    });
+P.getBerryFlavorByName("spicy").then(function (response) {
+  console.log(response);
+});
 ```
 
 **Array** as a parameter example. It can be a mixed array.
 This method fetches data asynchronously. So it is quite fast :smile:
 
 ```js
-  P.getBerryByName(['cheri', 'chesto', 5])
-    .then(function(response) {
-      console.log(response);
-    })
-  // response will be an Array containing 3 Objects
-  // response.forEach((item) => {console.log(item.size)}) // 80,50,20
+P.getBerryByName(["cheri", "chesto", 5]).then(function (response) {
+  console.log(response);
+});
+// response will be an Array containing 3 Objects
+// response.forEach((item) => {console.log(item.size)}) // 80,50,20
 ```
 
 ### Contests
@@ -156,28 +166,25 @@ This method fetches data asynchronously. So it is quite fast :smile:
 Use **getContestTypeByName** to return data about the effects of moves when used in contests.
 
 ```js
-  P.getContestTypeByName('cool')
-    .then(function(response) {
-      console.log(response);
-    });
+P.getContestTypeByName("cool").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getContestEffectById** to return data about the effects of moves when used in contests.
 
 ```js
-  P.getContestEffectById(1)
-    .then(function(response) {
-      console.log(response);
-    });
+P.getContestEffectById(1).then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getSuperContestEffectById** to return data about the effects of moves when used in super contests.
 
 ```js
-  P.getSuperContestEffectById(1)
-    .then(function(response) {
-      console.log(response);
-    });
+P.getSuperContestEffectById(1).then(function (response) {
+  console.log(response);
+});
 ```
 
 ### Encounters
@@ -185,28 +192,25 @@ Use **getSuperContestEffectById** to return data about the effects of moves when
 Use **getEncounterMethodByName** to return data about the conditions in which a trainer may encounter a pokemon in the wild.
 
 ```js
-  P.getEncounterMethodByName("walk")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getEncounterMethodByName("walk").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getEncounterConditionByName** to return data that affects which pokemon might appear in the wild.
 
 ```js
-  P.getEncounterConditionByName("swarm")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getEncounterConditionByName("swarm").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getEncounterConditionValueByName** to return data the various states that an encounter condition can have.
 
 ```js
-  P.getEncounterConditionValueByName("swarm-yes")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getEncounterConditionValueByName("swarm-yes").then(function (response) {
+  console.log(response);
+});
 ```
 
 ### Evolution
@@ -214,19 +218,17 @@ Use **getEncounterConditionValueByName** to return data the various states that 
 Use **getEvolutionChainById** to return data evolution chains.
 
 ```js
-  P.getEvolutionChainById(1)
-    .then(function(response) {
-      console.log(response);
-    });
+P.getEvolutionChainById(1).then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getEvolutionTriggerByName** to return data about triggers which cause pokemon to evolve.
 
 ```js
-  P.getEvolutionTriggerByName("level-up")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getEvolutionTriggerByName("level-up").then(function (response) {
+  console.log(response);
+});
 ```
 
 ### Games
@@ -234,37 +236,33 @@ Use **getEvolutionTriggerByName** to return data about triggers which cause poke
 Use **getGenerationByName** to return data about the different generations of pokemon games.
 
 ```js
-  P.getGenerationByName("generation-i")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getGenerationByName("generation-i").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getPokedexByName** to return data about specific types of pokedexes.
 
 ```js
-  P.getPokedexByName("kanto")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getPokedexByName("kanto").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getVersionByName** to return data about specific versions of pokemon games.
 
 ```js
-  P.getVersionByName("red")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getVersionByName("red").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getVersionGroupByName** to return data about specific version groups of pokemon games.
 
 ```js
-  P.getVersionGroupByName("red-blue")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getVersionGroupByName("red-blue").then(function (response) {
+  console.log(response);
+});
 ```
 
 ### Items
@@ -272,46 +270,41 @@ Use **getVersionGroupByName** to return data about specific version groups of po
 Use **getItemByName** to return data about specific items.
 
 ```js
-  P.getItemByName("master-ball")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getItemByName("master-ball").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getItemAttributeByName** to return data about specific item attribute.
 
 ```js
-  P.getItemAttributeByName("countable")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getItemAttributeByName("countable").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getItemCategoryByName** to return data about specific item category.
 
 ```js
-  P.getItemCategoryByName("stat-boosts")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getItemCategoryByName("stat-boosts").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getItemFlingEffectByName** to return data about specific item fling effect.
 
 ```js
-  P.getItemFlingEffectByName("badly-poison")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getItemFlingEffectByName("badly-poison").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getItemPocketByName** to return data about specific pockets in a players bag.
 
 ```js
-  P.getItemPocketByName("misc")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getItemPocketByName("misc").then(function (response) {
+  console.log(response);
+});
 ```
 
 ### Machines
@@ -319,10 +312,9 @@ Use **getItemPocketByName** to return data about specific pockets in a players b
 Use **getMachineById** to return data about specific machine.
 
 ```js
-  P.getMachineById(2)
-    .then(function(response) {
-      console.log(response);
-    });
+P.getMachineById(2).then(function (response) {
+  console.log(response);
+});
 ```
 
 ### Moves
@@ -330,64 +322,57 @@ Use **getMachineById** to return data about specific machine.
 Use **getMoveByName** to return data about specific pokemon move.
 
 ```js
-  P.getMoveByName("pound")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getMoveByName("pound").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getMoveAilmentByName** to return data about specific pokemon move ailment.
 
 ```js
-  P.getMoveAilmentByName("paralysis")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getMoveAilmentByName("paralysis").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getMoveBattleStyleByName** to return data about specific pokemon move battle style.
 
 ```js
-  P.getMoveBattleStyleByName("attack")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getMoveBattleStyleByName("attack").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getMoveCategoryByName** to return data about specific pokemon move category.
 
 ```js
-  P.getMoveCategoryByName("ailment")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getMoveCategoryByName("ailment").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getMoveDamageClassByName** to return data about specific pokemon damage class.
 
 ```js
-  P.getMoveDamageClassByName("status")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getMoveDamageClassByName("status").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getMoveLearnMethodByName** to return data about specific pokemon learn method.
 
 ```js
-  P.getMoveLearnMethodByName("level-up")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getMoveLearnMethodByName("level-up").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getMoveTargetByName** to return data about specific pokemon move target.
 
 ```js
-  P.getMoveTargetByName("specific-move")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getMoveTargetByName("specific-move").then(function (response) {
+  console.log(response);
+});
 ```
 
 ### Locations
@@ -395,37 +380,33 @@ Use **getMoveTargetByName** to return data about specific pokemon move target.
 Use **getLocationByName** to return data about specific pokemon location.
 
 ```js
-  P.getLocationByName("sinnoh")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getLocationByName("sinnoh").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getLocationAreaByName** to return data about specific pokemon location area.
 
 ```js
-  P.getLocationAreaByName("canalave-city-area")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getLocationAreaByName("canalave-city-area").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getPalParkAreaByName** to return data about specific pokemon pal park area.
 
 ```js
-  P.getPalParkAreaByName("forest")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getPalParkAreaByName("forest").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getRegionByName** to return data about specific pokemon region.
 
 ```js
-  P.getRegionByName("kanto")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getRegionByName("kanto").then(function (response) {
+  console.log(response);
+});
 ```
 
 ### Pokemon
@@ -433,136 +414,121 @@ Use **getRegionByName** to return data about specific pokemon region.
 Use **getAbilityByName** to return data about specific pokemon ability.
 
 ```js
-  P.getAbilityByName("stench")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getAbilityByName("stench").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getCharacteristicById** to return data about specific pokemon characteristic.
 
 ```js
-  P.getCharacteristicById(1)
-    .then(function(response) {
-      console.log(response);
-    });
+P.getCharacteristicById(1).then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getEggGroupByName** to return data about specific pokemon egg group.
 
 ```js
-  P.getEggGroupByName("monster")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getEggGroupByName("monster").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getGenderByName** to return data about specific pokemon gender.
 
 ```js
-  P.getGenderByName("female")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getGenderByName("female").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getGrowthRateByName** to return data about specific pokemon growth rate.
 
 ```js
-  P.getGrowthRateByName("slow")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getGrowthRateByName("slow").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getNatureByName** to return data about specific pokemon nature.
 
 ```js
-  P.getNatureByName("bold")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getNatureByName("bold").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getPokeathlonStatByName** to return data about specific pokeathon stat.
 
 ```js
-  P.getPokeathlonStatByName("speed")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getPokeathlonStatByName("speed").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getPokemonByName** to return data about specific pokemon.
 
 ```js
-  P.getPokemonByName("butterfree")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getPokemonByName("butterfree").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getPokemonColorByName** to return data about specific pokemon color.
 
 ```js
-  P.getPokemonColorByName("black")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getPokemonColorByName("black").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getPokemonFormByName** to return data about specific pokemon form.
 
 ```js
-  P.getPokemonFormByName("wormadam-plant")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getPokemonFormByName("wormadam-plant").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getPokemonHabitatByName** to return data about specific pokemon habitat.
 
 ```js
-  P.getPokemonHabitatByName("grottes")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getPokemonHabitatByName("grottes").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getPokemonShapeByName** to return data about specific pokemon shape.
 
 ```js
-  P.getPokemonShapeByName("ball")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getPokemonShapeByName("ball").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getPokemonSpeciesByName** to return data about specific pokemon species.
 
 ```js
-  P.getPokemonSpeciesByName("wormadam")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getPokemonSpeciesByName("wormadam").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getStatByName** to return data about specific pokemon stat.
 
 ```js
-  P.getStatByName("attack")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getStatByName("attack").then(function (response) {
+  console.log(response);
+});
 ```
 
 Use **getTypeByName** to return data about specific pokemon type.
 
 ```js
-  P.getTypeByName("ground")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getTypeByName("ground").then(function (response) {
+  console.log(response);
+});
 ```
 
 ### Utility
@@ -570,10 +536,9 @@ Use **getTypeByName** to return data about specific pokemon type.
 Use **getLanguageByName** to return data about specific pokemon language.
 
 ```js
-  P.getLanguageByName("ja")
-    .then(function(response) {
-      console.log(response);
-    });
+P.getLanguageByName("ja").then(function (response) {
+  console.log(response);
+});
 ```
 
 ### Custom URLs and paths
@@ -581,15 +546,17 @@ Use **getLanguageByName** to return data about specific pokemon language.
 Use **resource** to return data about any URL or path.
 
 ```js
-  P.resource(['/api/v2/pokemon/36', 'api/v2/berry/8', 'https://pokeapi.co/api/v2/ability/9/'])
-    .then(function(response) {
-      console.log(response); // resource function accepts singles or arrays of URLs/paths
-    });
+P.resource([
+  "/api/v2/pokemon/36",
+  "api/v2/berry/8",
+  "https://pokeapi.co/api/v2/ability/9/",
+]).then(function (response) {
+  console.log(response); // resource function accepts singles or arrays of URLs/paths
+});
 
-  P.resource('api/v2/berry/5')
-    .then(function(response) {
-      console.log(response);
-    });
+P.resource("api/v2/berry/5").then(function (response) {
+  console.log(response);
+});
 ```
 
 ## Root Endpoints
@@ -601,27 +568,24 @@ For each root endpoint we provide a method to get all the items contained by tha
 
 **TIP**: Do not pass any config Object to your call, since you will get every item and everything will be cached to your RAM.
 
-This call will get the list of pokemon between ID 35 and ID 44 
-
+This call will get the list of pokemon between ID 35 and ID 44
 
 ```js
-  var interval = {
-    limit: 10,
-    offset: 34
-  }
-  P.getPokemonsList(interval)
-    .then(function(response) {
-      console.log(response);
-    })
+var interval = {
+  limit: 10,
+  offset: 34,
+};
+P.getPokemonsList(interval).then(function (response) {
+  console.log(response);
+});
 ```
 
 This is what you will get:
 
-
 ```json
 {
   "count": 811,
-  "next":  "https://pokeapi.co:443/api/v2/pokemon/?limit=11&offset=44",
+  "next": "https://pokeapi.co:443/api/v2/pokemon/?limit=11&offset=44",
   "previous": "https://pokeapi.co:443/api/v2/pokemon/?limit=11&offset=22",
   "results": [
     {
@@ -670,7 +634,7 @@ This is what you will get:
 - .getMoveCategoriesList()
 - .getMoveDamageClassesList()
 - .getMoveLearnMethodsList()
-- .getMoveTar* getsList()
+- .getMoveTar\* getsList()
 - .getLocationsList()
 - .getLocationAreasList()
 - .getPalParkAreasList()
