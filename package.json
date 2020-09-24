@@ -1,10 +1,17 @@
 {
   "name": "@amoutonbrady/pokeapi",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An API wrapper for PokeAPI - browser use only",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "private": false,
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rollup -c && tsc && yarn node scripts/patchTypes",
     "prepublish": "npm run build"
