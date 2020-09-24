@@ -4,20 +4,22 @@ import rootEndpoints from "./rootEndpoints.json";
 import axios from "redaxios";
 
 export class Pokedex {
-  private store = new Store("pokeapi-js-wrapper", "pokeapi-js-wrapper");
-  private config: Config = {
-    // Pokedex config
-    cache: true,
-    timeout: 20 * 1_000,
-    baseUrl: "https://pokeapi.co/api/v2/",
-
-    // Endpoint configuration
-    offset: 0,
-    limit: 100_000,
-  };
+  private store: Store;
+  private config: Config;
 
   constructor(config: Partial<Config> = {}) {
-    this.config = { ...this.config, ...config };
+    this.store = new Store("pokeapi-js-wrapper", "pokeapi-js-wrapper");
+    this.config = {
+      // Pokedex config
+      cache: true,
+      timeout: 20 * 1_000,
+      baseUrl: "https://pokeapi.co/api/v2/",
+
+      // Endpoint configuration
+      offset: 0,
+      limit: 100_000,
+      ...config,
+    };
 
     for (const [endpointName, endpoint] of endpoints) {
       this[endpointName] = (input: number | string | (number | string)[]) => {
